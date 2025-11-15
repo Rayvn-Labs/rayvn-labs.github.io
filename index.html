@@ -96,16 +96,11 @@
         }
     </style>
 </head>
-    
-<script>
-    AOS.init();
-</script>
-
 <body>
 
     <header>
     <div class="logo-container">
-        <img src="logo1.png" alt="Rayvn Logo">
+        <img src="logo.png" alt="Rayvn Logo">
     </div>
     <nav>
         <a href="index.html">HOME</a>
@@ -144,6 +139,40 @@
         </svg>
     </a>
     </div>
+
+    <script>
+    AOS.init({ once: true, offset: 0, duration: 1000 });
+
+    const slide1Video = document.getElementById('slide1-video');
+    let slide1Played = false;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target;
+
+            if(video.tagName.toLowerCase() !== 'video') return;
+
+            // Special case: slide1 plays only once
+            if(video.id === 'slide1-video') {
+                if(entry.isIntersecting && !slide1Played) {
+                    video.currentTime = 0;
+                    video.play();
+                    slide1Played = true;
+                }
+                return;
+            }
+            // Play/pause other videos based on visibility
+            if(entry.isIntersecting) {
+                video.currentTime = 0;
+                video.play();
+            } else {
+                video.pause();
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('video').forEach(video => observer.observe(video));
+    </script>
 
 </body>
 </html>
